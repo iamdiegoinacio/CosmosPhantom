@@ -8,7 +8,7 @@
 ![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-%23FE5196?logo=conventionalcommits&logoColor=white)
 ![License](https://img.shields.io/badge/license-MIT-green)
 
-**Cosmos Phantom SDK** é um pacote corporativo para .NET focado em fornecer um ambiente de banco de dados Cosmos DB em memória, de forma nativa e aderente aos padrões da Microsoft. Ele facilita o desenvolvimento local, a automação de testes e a engenharia do caos, sem a necessidade de infraestrutura pesada ou acesso a recursos em nuvem reais durante o ciclo de desenvolvimento.
+**Cosmos Phantom SDK** é um SDK para .NET focado em fornecer um ambiente de banco de dados Cosmos DB em memória, de forma nativa e aderente aos padrões da Microsoft. Ele facilita o desenvolvimento local, a automação de testes e a engenharia do caos, sem a necessidade de infraestrutura pesada ou acesso a recursos em nuvem reais durante o ciclo de desenvolvimento.
 
 ## Principais Recursos
 
@@ -66,7 +66,6 @@ No seu `Program.cs`, certifique-se de importar os *namespaces* obrigatórios par
 ```csharp
 using Cosmos.Phantom.InMemoryEmulator.SDK;
 using Cosmos.Phantom.InMemoryEmulator.SDK.Seeding;
-// using Cosmos.Phantom.InMemoryEmulator.SDK.Configuration; (Opcional)
 ```
 
 A injeção do SDK foi projetada para ser simples e seguir as práticas idiomáticas do ASP.NET Core:
@@ -192,5 +191,7 @@ O SDK adota os princípios **SOLID**:
 - Configuração suportada pelo **Options Pattern** nativo com `[Required]` DataAnnotations.
 - Delegação de tarefas via interfaces injetáveis (`ICosmosDbSeederService`, `ICosmosDbManager`).
 - Manipulação da injeção de dependência isolada, evitando poluir o WebApplication Builder do software principal.
+
+👉 **[Ver Diagramas de Arquitetura Completos (Fluxo e Sequência)](Docs/Architecture.md)**
 
 ---
