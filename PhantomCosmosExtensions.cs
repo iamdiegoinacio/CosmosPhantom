@@ -1,4 +1,4 @@
-﻿using Microsoft.Azure.Cosmos;
+using Microsoft.Azure.Cosmos;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -8,6 +8,9 @@ using Cosmos.Phantom.InMemoryEmulator.SDK.Exceptions;
 using Cosmos.Phantom.InMemoryEmulator.SDK.Configuration;
 using Cosmos.Phantom.InMemoryEmulator.SDK.ChaosEngineering;
 using System;
+using System.IO;
+using System.Reflection;
+using Newtonsoft.Json.Linq;
 
 using CosmosDB.InMemoryEmulator;
 
@@ -30,21 +33,46 @@ public static class PhantomCosmosExtensions
             return services;
         }
 
-        // Delega validação ao ASP.NET Core
+        // 1. Resolve configurações: Lê o que o usuário forneceu, ou faz fallback pro arquivo embutido
+        var emulatorConfig = configuration.GetSection("CosmosDbEmulator").Get<CosmosDbEmulatorConfig>();
+        var fallbackConfig = LoadEmbeddedConfig();
+
+        if (emulatorConfig == null)
+        {
+            emulatorConfig = fallbackConfig;
+        }
+        else if (fallbackConfig != null)
+        {
+            // Mescla as configurações caso o usuário tenha fornecido apenas algumas propriedades
+            emulatorConfig.DatabaseName ??= fallbackConfig.DatabaseName;
+            emulatorConfig.Containers ??= fallbackConfig.Containers;
+            emulatorConfig.Chaos ??= fallbackConfig.Chaos;
+        }
+
+        if (emulatorConfig == null) return services;
+
+        // Configura as Options injetáveis para que outros serviços do SDK possam acessar
+        services.Configure<CosmosDbEmulatorConfig>(options =>
+        {
+            options.DatabaseName = emulatorConfig.DatabaseName;
+            options.Containers = emulatorConfig.Containers;
+            options.Chaos = emulatorConfig.Chaos;
+        });
+
+        // Valida as anotações do modelo final
         services.AddOptions<CosmosDbEmulatorConfig>()
-            .Bind(configuration.GetSection("CosmosDbEmulator"))
             .ValidateDataAnnotations()
             .ValidateOnStart();
-
-        var emulatorConfig = configuration.GetSection("CosmosDbEmulator").Get<CosmosDbEmulatorConfig>();
-        if (emulatorConfig == null) return services;
 
         services.UseInMemoryCosmosDB(options =>
         {
             options.DatabaseName = emulatorConfig.DatabaseName;
-            foreach (var container in emulatorConfig.Containers)
+            if (emulatorConfig.Containers != null)
             {
-                options.AddContainer(container.Name, container.PartitionKeyPath);
+                foreach (var container in emulatorConfig.Containers)
+                {
+                    options.AddContainer(container.Name, container.PartitionKeyPath);
+                }
             }
 
             options.OnHandlerCreated = (name, handler) =>
@@ -59,5 +87,27 @@ public static class PhantomCosmosExtensions
         services.AddTransient<ICosmosDbSeederService, CosmosDbSeederService>();
 
         return services;
+    }
+
+    private static CosmosDbEmulatorConfig? LoadEmbeddedConfig()
+    {
+        try
+        {
+            var assembly = Assembly.GetExecutingAssembly();
+            var resourceName = "Cosmos.Phantom.InMemoryEmulator.SDK.Resources.Cosmos.Emulator.Config.json";
+            
+            using var stream = assembly.GetManifestResourceStream(resourceName);
+            if (stream == null) return null;
+
+            using var reader = new StreamReader(stream);
+            var json = reader.ReadToEnd();
+            var jObj = JObject.Parse(json);
+            
+            return jObj["CosmosDbEmulator"]?.ToObject<CosmosDbEmulatorConfig>();
+        }
+        catch
+        {
+            return null; // Falha segura se o embedded resource não for encontrado
+        }
     }
 }

@@ -38,22 +38,15 @@ O pacote `CosmosDB.InMemoryEmulator` provê a fundação técnica essencial para
 
 ---
 
-## 1. Instalação e Pré-requisitos
+## 1. Instalação Simples (Plug and Play)
 
-Para que o SDK Phantom consiga ler seus arquivos de configuração e sementes (seeds) durante a execução, o projeto consumidor (ex: `Host.csproj`) precisa obrigatoriamente referenciar o SDK e garantir que os arquivos `.json` sejam copiados para a pasta de saída (Output Directory).
+Para usar o SDK, o projeto consumidor (ex: `Host.csproj`) precisa apenas referenciar o SDK e ter a chave de ativação no `appsettings.json`. O SDK já vem com uma **modelagem e sementes (seeds) padrão embutidas (Boilerplate)**, então você não precisa criar nenhum arquivo para testar!
 
 Adicione o seguinte trecho no `.csproj` da sua API:
 
 ```xml
 <ItemGroup>
-    <!-- Referência e Arquivos do Phantom SDK -->
     <ProjectReference Include="..\Cosmos.Phantom.InMemoryEmulator.SDK\Cosmos.Phantom.InMemoryEmulator.SDK.csproj" />
-    <Content Update="Cosmos.Emulator.Config.json">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Update="Seeds\*.json">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
 </ItemGroup>
 ```
 
@@ -61,40 +54,53 @@ Adicione o seguinte trecho no `.csproj` da sua API:
 
 ## 2. Como Usar no `Program.cs`
 
-No seu `Program.cs`, certifique-se de importar os *namespaces* obrigatórios para acessar os métodos de extensão do SDK:
+No seu `Program.cs`, importe os namespaces:
 
 ```csharp
 using Cosmos.Phantom.InMemoryEmulator.SDK;
 using Cosmos.Phantom.InMemoryEmulator.SDK.Seeding;
 ```
 
-A injeção do SDK foi projetada para ser simples e seguir as práticas idiomáticas do ASP.NET Core:
+A injeção do SDK foi projetada para ser extremamente limpa:
 
 ```csharp
-// 1. Fase de Configuração de Serviços (builder.Services)
-// Adiciona o SDK de emulação e o substitui o client Cosmos na injeção de dependências.
-builder.Services.AddCosmosDbEmulator(builder.Environment, builder.Configuration);
+// 1. Fase de Configuração de Serviços
+// Adiciona o SDK de emulação injetando a configuração padrão (ou a sua customizada)
+builder.Services.AddCosmosPhantomEmulator(builder.Environment, builder.Configuration);
 
 var app = builder.Build();
 
 // 2. Fase de Pipeline / Middleware
-// Executa o Seeder para popular os dados antes da API aceitar as requisições.
-await app.Services.UseCosmosDbEmulatorSeederAsync();
+// Executa o Seeder para popular os dados antes da API aceitar as requisições
+await app.Services.UseCosmosPhantomSeederAsync();
 
 app.Run();
 ```
 
-*Nota: O SDK é inteligente o bastante para não executar ou injetar nada se o ambiente não for `Development` ou se a flag `UseCosmosDbEmulator` for `false`.*
+*Nota: O SDK não injetará nada se o ambiente não for `Development` ou se a flag `UseCosmosDbEmulator` for `false`.*
 
 ---
 
-## 3. Configurações (`appsettings.json`)
+## 3. Configurações e Customizações (Opcional)
 
-Para que o SDK funcione, adicione a seção `CosmosDbEmulator` nas suas configurações. Caso algo obrigatório falte, a API recusará a inicialização (Fail-Fast).
+O SDK usa uma estratégia de **Fallback**. Isso significa que ele lê suas próprias configurações internas por padrão, mas **você pode sobrescrevê-las** quando quiser personalizar os containers e injetar o caos (Chaos Engineering).
+
+### 3.1 Chave de Ativação (Obrigatória)
+
+No seu `appsettings.Development.json`, adicione apenas a chave global para ativar o emulador:
 
 ```json
 {
-  "UseCosmosDbEmulator": true,
+  "UseCosmosDbEmulator": true
+}
+```
+
+### 3.2 Sobrescrevendo a Configuração Padrão (`Cosmos.Emulator.Config.json`)
+
+Se você quiser usar uma modelagem de banco diferente da que vem embutida, basta criar um arquivo `Cosmos.Emulator.Config.json` na raiz da sua API, referenciá-lo no `Program.cs` (`builder.Configuration.AddJsonFile("Cosmos.Emulator.Config.json")`) e garantir que ele seja copiado no `.csproj` (`CopyToOutputDirectory`).
+
+```json
+{
   "CosmosDbEmulator": {
     "DatabaseName": "MeuBancoLocal",
     "Containers": [
