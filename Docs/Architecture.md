@@ -10,29 +10,29 @@ Este diagrama mostra as principais peças do SDK e como elas interagem com a Apl
 
 ```mermaid
 flowchart TD
-    subgraph ConsumerAPI [API Consumidora (Host)]
-        Config[appsettings.json]
-        Program[Program.cs]
-        Seeds[Pasta /Seeds]
+    subgraph ConsumerAPI ["API Consumidora (Host)"]
+        Config["appsettings.json"]
+        Program["Program.cs"]
+        Seeds["Pasta /Seeds"]
     end
 
-    subgraph PhantomSDK [Cosmos Phantom SDK]
-        Options[Options Pattern Validations]
-        ExtSetup[AddCosmosPhantomEmulator]
-        ExtSeed[UseCosmosPhantomSeederAsync]
+    subgraph PhantomSDK ["Cosmos Phantom SDK"]
+        Options["Options Pattern Validations"]
+        ExtSetup["AddCosmosPhantomEmulator"]
+        ExtSeed["UseCosmosPhantomSeederAsync"]
         
-        subgraph Seeding [Motor de Seeding]
-            SeederService(CosmosDbSeederService)
-            DbManager(CosmosDbManager)
-            FileReader(SeedFileReader)
+        subgraph Seeding ["Motor de Seeding"]
+            SeederService("CosmosDbSeederService")
+            DbManager("CosmosDbManager")
+            FileReader("SeedFileReader")
         end
         
-        Chaos[ChaosEngineeringConfigurator]
+        Chaos["ChaosEngineeringConfigurator"]
     end
 
-    subgraph BaseEmulator [CosmosDB.InMemoryEmulator NuGet]
-        InMemDB[(In-Memory Cosmos Server)]
-        HttpMessageHandler[Custom HttpMessageHandler]
+    subgraph BaseEmulator ["CosmosDB.InMemoryEmulator NuGet"]
+        InMemDB[("In-Memory Cosmos Server")]
+        HttpMessageHandler["Custom HttpMessageHandler"]
     end
 
     %% Relações da inicialização
