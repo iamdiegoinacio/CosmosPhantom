@@ -1,6 +1,14 @@
-# InMemoryEmulator.CosmosDB.SDK
+<div align="center">
+  <img src="Docs/Img/phantom_logo.png" alt="Cosmos Phantom Logo" width="250"/>
+</div>
 
-**InMemoryEmulator.CosmosDB.SDK** é um pacote corporativo para .NET focado em fornecer um ambiente de banco de dados Cosmos DB em memória, de forma nativa e aderente aos padrões da Microsoft. Ele facilita o desenvolvimento local, a automação de testes e a engenharia do caos, sem a necessidade de infraestrutura pesada ou acesso a recursos em nuvem reais durante o ciclo de desenvolvimento.
+# Cosmos Phantom SDK (InMemoryEmulator)
+
+![.NET 8](https://img.shields.io/badge/.NET-8.0-blueviolet.svg)
+![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-%23FE5196?logo=conventionalcommits&logoColor=white)
+![License](https://img.shields.io/badge/license-MIT-green)
+
+**Cosmos Phantom SDK** é um pacote corporativo para .NET focado em fornecer um ambiente de banco de dados Cosmos DB em memória, de forma nativa e aderente aos padrões da Microsoft. Ele facilita o desenvolvimento local, a automação de testes e a engenharia do caos, sem a necessidade de infraestrutura pesada ou acesso a recursos em nuvem reais durante o ciclo de desenvolvimento.
 
 ## Principais Recursos
 
