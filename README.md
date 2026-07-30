@@ -20,6 +20,24 @@
 
 ---
 
+## Créditos e Base Tecnológica
+
+Este SDK foi construído tendo como motor principal o pacote NuGet **CosmosDB.InMemoryEmulator**.
+
+```xml
+<PackageReference Include="CosmosDB.InMemoryEmulator" Version="4.0.20" />
+```
+
+**O que o Cosmos Phantom SDK faz com esse pacote?**
+O pacote `CosmosDB.InMemoryEmulator` provê a fundação técnica essencial para criar um servidor Cosmos DB local e em memória no .NET. No entanto, o **Cosmos Phantom SDK** atua como uma camada superior (*wrapper/framework*) que estende as capacidades básicas. O Phantom pega o motor base do emulador e adiciona de forma transparente:
+
+1. **Auto-seeding Dinâmico:** Automatiza a injeção inicial de dados lendo nativamente arquivos `.json`, poupando a necessidade de scripts de carga manuais ao subir o emulador.
+2. **Engenharia do Caos (Chaos Engineering):** Introduz uma camada de interceptação que simula falhas de rede e de requisições de forma sistêmica e configurável.
+3. **Fail-Fast Configuration:** Adiciona validações robustas baseadas no modelo *Options Pattern* para que o ambiente local falhe instantaneamente caso falte alguma configuração essencial, prevenindo ambiguidades no ambiente de desenvolvimento.
+4. **Integração Plug-and-Play no ASP.NET Core:** Simplifica o *setup* para apenas poucas linhas no `Program.cs`, abstraindo a complexidade de instanciar e gerenciar o ciclo de vida do emulador base.
+
+---
+
 ## 1. Instalação e Pré-requisitos
 
 Para que o SDK Phantom consiga ler seus arquivos de configuração e sementes (seeds) durante a execução, o projeto consumidor (ex: `Host.csproj`) precisa obrigatoriamente referenciar o SDK e garantir que os arquivos `.json` sejam copiados para a pasta de saída (Output Directory).
