@@ -2,7 +2,7 @@
 using System.Collections.ObjectModel;
 using System;
 
-namespace Cosmos.Phantom.InMemoryEmulator.SDK.Configuration;
+namespace Cosmos.Phantom.SDK.Configuration;
 
 public static class ContainerConfigExtensions
 {
@@ -12,7 +12,7 @@ public static class ContainerConfigExtensions
 
         if (containerConfig.IndexingPolicy != null)
         {
-            containerProperties.IndexingPolicy.IndexingMode = containerConfig.IndexingPolicy.Mode;
+            containerProperties.IndexingPolicy.IndexingMode = containerConfig.IndexingPolicy.IndexingMode;
             containerProperties.IndexingPolicy.Automatic = containerConfig.IndexingPolicy.Automatic;
 
             foreach (var path in containerConfig.IndexingPolicy.IncludedPaths)

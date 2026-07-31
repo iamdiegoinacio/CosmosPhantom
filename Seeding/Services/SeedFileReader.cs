@@ -1,14 +1,14 @@
-using System.IO;
+﻿using System.IO;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
-using Cosmos.Phantom.InMemoryEmulator.SDK.Seeding.Interfaces;
+using Cosmos.Phantom.SDK.Seeding.Interfaces;
 
-namespace Cosmos.Phantom.InMemoryEmulator.SDK.Seeding.Services;
+namespace Cosmos.Phantom.SDK.Seeding.Services;
 
 public class SeedFileReader : ISeedFileReader
 {
-    public async Task<string> ReadSeedFileAsync(string folderPath, string containerName, CancellationToken ct = default)
+    public async Task<string?> ReadSeedFileAsync(string folderPath, string containerName, CancellationToken ct = default)
     {
         if (string.IsNullOrWhiteSpace(containerName))
             return null;
@@ -24,9 +24,9 @@ public class SeedFileReader : ISeedFileReader
             }
         }
 
-        // 2. Fallback: Tenta ler o arquivo padrão embutido na DLL do SDK
+        // 2. Fallback: Tenta ler o arquivo padrÃ£o embutido na DLL do SDK
         var assembly = Assembly.GetExecutingAssembly();
-        var resourceName = $"Cosmos.Phantom.InMemoryEmulator.SDK.Resources.Seeds.{containerName}.json";
+        var resourceName = $"Cosmos.Phantom.SDK.Resources.Seeds.{containerName}.json";
         
         using var stream = assembly.GetManifestResourceStream(resourceName);
         if (stream != null)

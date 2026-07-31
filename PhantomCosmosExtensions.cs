@@ -1,69 +1,51 @@
-using Microsoft.Azure.Cosmos;
+﻿using Microsoft.Azure.Cosmos;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Cosmos.Phantom.InMemoryEmulator.SDK.Seeding.Interfaces;
-using Cosmos.Phantom.InMemoryEmulator.SDK.Seeding.Services;
-using Cosmos.Phantom.InMemoryEmulator.SDK.Exceptions;
-using Cosmos.Phantom.InMemoryEmulator.SDK.Configuration;
-using Cosmos.Phantom.InMemoryEmulator.SDK.ChaosEngineering;
+using Cosmos.Phantom.SDK.Seeding;
+using Cosmos.Phantom.SDK.Exceptions;
+using Cosmos.Phantom.SDK.Configuration;
+using Cosmos.Phantom.SDK.ChaosEngineering;
 using System;
-using System.IO;
-using System.Reflection;
-using Newtonsoft.Json.Linq;
 
 using CosmosDB.InMemoryEmulator;
 
-namespace Cosmos.Phantom.InMemoryEmulator.SDK;
+namespace Cosmos.Phantom.SDK;
 
 public static class PhantomCosmosExtensions
 {
     /// <summary>
-    /// Registra apenas o CosmosClient emulado e os serviços de Seeding.
-    /// Em produção, a API consumidora deve registrar seu próprio CosmosClient.
+    /// Registra apenas o CosmosClient emulado e os serviÃ§os de Seeding.
+    /// Em produÃ§Ã£o, a API consumidora deve registrar seu prÃ³prio CosmosClient.
     /// </summary>
     public static IServiceCollection AddCosmosPhantomEmulator(
         this IServiceCollection services,
         IHostEnvironment environment,
         IConfiguration configuration)
     {
-        // Fail-Fast Silencioso: Se não for dev ou a flag estiver desligada, ignora o SDK.
+        // Fail-Fast Silencioso: Se nÃ£o for dev ou a flag estiver desligada, ignora o SDK.
         if (!environment.IsDevelopment() || !configuration.GetValue<bool>("UseCosmosDbEmulator"))
         {
             return services;
         }
 
-        // 1. Resolve configurações: Lê o que o usuário forneceu, ou faz fallback pro arquivo embutido
-        var emulatorConfig = configuration.GetSection("CosmosDbEmulator").Get<CosmosDbEmulatorConfig>();
-        var fallbackConfig = LoadEmbeddedConfig();
-
-        if (emulatorConfig == null)
-        {
-            emulatorConfig = fallbackConfig;
-        }
-        else if (fallbackConfig != null)
-        {
-            // Mescla as configurações caso o usuário tenha fornecido apenas algumas propriedades
-            emulatorConfig.DatabaseName ??= fallbackConfig.DatabaseName;
-            emulatorConfig.Containers ??= fallbackConfig.Containers;
-            emulatorConfig.Chaos ??= fallbackConfig.Chaos;
-        }
-
+        // 1. Resolve configuraÃ§Ãµes (UsuÃ¡rio vs Embutido)
+        var emulatorConfig = CosmosEmulatorConfigResolver.Resolve(configuration);
+        var chaosConfig = CosmosChaosConfigResolver.Resolve(configuration);
         if (emulatorConfig == null) return services;
 
-        // Configura as Options injetáveis para que outros serviços do SDK possam acessar
+        // 2. Configura e valida as Options
         services.Configure<CosmosDbEmulatorConfig>(options =>
         {
             options.DatabaseName = emulatorConfig.DatabaseName;
             options.Containers = emulatorConfig.Containers;
-            options.Chaos = emulatorConfig.Chaos;
         });
 
-        // Valida as anotações do modelo final
         services.AddOptions<CosmosDbEmulatorConfig>()
             .ValidateDataAnnotations()
             .ValidateOnStart();
 
+        // 3. Inicializa o emulador e o injetor de caos
         services.UseInMemoryCosmosDB(options =>
         {
             options.DatabaseName = emulatorConfig.DatabaseName;
@@ -77,37 +59,13 @@ public static class PhantomCosmosExtensions
 
             options.OnHandlerCreated = (name, handler) =>
             {
-                ChaosEngineeringConfigurator.ConfigureFaultInjector(handler, configuration);
+                ChaosEngineeringConfigurator.ConfigureFaultInjector(handler, chaosConfig);
             };
         });
 
-        // Registra os serviços para a carga de dados (Seeding)
-        services.AddTransient<ISeedFileReader, SeedFileReader>();
-        services.AddTransient<ICosmosDbManager, CosmosDbManager>();
-        services.AddTransient<ICosmosDbSeederService, CosmosDbSeederService>();
+        // 4. Registra serviÃ§os complementares
+        services.AddPhantomSeedingServices();
 
         return services;
-    }
-
-    private static CosmosDbEmulatorConfig? LoadEmbeddedConfig()
-    {
-        try
-        {
-            var assembly = Assembly.GetExecutingAssembly();
-            var resourceName = "Cosmos.Phantom.InMemoryEmulator.SDK.Resources.Cosmos.Emulator.Config.json";
-            
-            using var stream = assembly.GetManifestResourceStream(resourceName);
-            if (stream == null) return null;
-
-            using var reader = new StreamReader(stream);
-            var json = reader.ReadToEnd();
-            var jObj = JObject.Parse(json);
-            
-            return jObj["CosmosDbEmulator"]?.ToObject<CosmosDbEmulatorConfig>();
-        }
-        catch
-        {
-            return null; // Falha segura se o embedded resource não for encontrado
-        }
     }
 }

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Cosmos.Phantom.InMemoryEmulator.SDK.Exceptions;
+namespace Cosmos.Phantom.SDK.Exceptions;
 
 /// <summary>
 /// Exceção lançada quando a leitura, parser ou inserção do arquivo de seed (JSON) falha de maneira irrecuperável.

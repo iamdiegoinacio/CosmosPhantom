@@ -1,23 +1,17 @@
 ﻿using Microsoft.Azure.Cosmos;
 using System.Threading.Tasks;
-using Cosmos.Phantom.InMemoryEmulator.SDK.Configuration;
-using Cosmos.Phantom.InMemoryEmulator.SDK.Seeding.Interfaces;
+using Cosmos.Phantom.SDK.Configuration;
+using Cosmos.Phantom.SDK.Seeding.Interfaces;
 using System.Collections.ObjectModel;
 
-namespace Cosmos.Phantom.InMemoryEmulator.SDK.Seeding.Services;
+namespace Cosmos.Phantom.SDK.Seeding.Services;
 
-public class CosmosDbManager : ICosmosDbManager
+public class CosmosDbManager(CosmosClient cosmosClient) : ICosmosDbManager
 {
-    private readonly CosmosClient _cosmosClient;
-
-    public CosmosDbManager(CosmosClient cosmosClient)
-    {
-        _cosmosClient = cosmosClient;
-    }
 
     public async Task<Database> CreateDatabaseIfNotExistsAsync(string databaseName)
     {
-        var response = await _cosmosClient.CreateDatabaseIfNotExistsAsync(databaseName);
+        var response = await cosmosClient.CreateDatabaseIfNotExistsAsync(databaseName);
         return response.Database;
     }
 

@@ -1,8 +1,8 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
-using Cosmos.Phantom.InMemoryEmulator.SDK.Configuration;
+using Cosmos.Phantom.SDK.Configuration;
 
-namespace Cosmos.Phantom.InMemoryEmulator.SDK.Seeding.Interfaces;
+namespace Cosmos.Phantom.SDK.Seeding.Interfaces;
 
 public interface ICosmosDbSeederService
 {

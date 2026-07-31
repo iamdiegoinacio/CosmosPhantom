@@ -4,11 +4,11 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Cosmos.Phantom.InMemoryEmulator.SDK.Configuration;
-using Cosmos.Phantom.InMemoryEmulator.SDK.ChaosEngineering;
-using Cosmos.Phantom.InMemoryEmulator.SDK.Seeding.Interfaces;
+using Cosmos.Phantom.SDK.Configuration;
+using Cosmos.Phantom.SDK.ChaosEngineering;
+using Cosmos.Phantom.SDK.Seeding.Interfaces;
 
-namespace Cosmos.Phantom.InMemoryEmulator.SDK.Seeding;
+namespace Cosmos.Phantom.SDK.Seeding;
 
 public static class PhantomCosmosSeederExtensions
 {

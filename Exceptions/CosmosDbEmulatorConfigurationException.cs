@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Cosmos.Phantom.InMemoryEmulator.SDK.Exceptions;
+namespace Cosmos.Phantom.SDK.Exceptions;
 
 /// <summary>
 /// Exceção lançada quando as configurações do Cosmos DB Emulator no appsettings.json estão ausentes ou inválidas.

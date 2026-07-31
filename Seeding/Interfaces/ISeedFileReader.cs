@@ -1,9 +1,9 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 
-namespace Cosmos.Phantom.InMemoryEmulator.SDK.Seeding.Interfaces;
+namespace Cosmos.Phantom.SDK.Seeding.Interfaces;
 
 public interface ISeedFileReader
 {
-    Task<string> ReadSeedFileAsync(string folderPath, string containerName, CancellationToken ct = default);
+    Task<string?> ReadSeedFileAsync(string folderPath, string containerName, CancellationToken ct = default);
 }
