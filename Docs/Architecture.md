@@ -25,6 +25,7 @@ flowchart TD
             SeederService("CosmosDbSeederService")
             DbManager("CosmosDbManager")
             FileReader("SeedFileReader")
+            BulkInserter("CosmosDbBulkInserter")
         end
         
         Chaos["ChaosEngineeringConfigurator"]
@@ -45,6 +46,8 @@ flowchart TD
     SeederService -->|Lê JSONs| FileReader
     FileReader -->|Busca de| Seeds
     SeederService -->|Cria DB/Containers| DbManager
+    SeederService -->|Delega Inserção| BulkInserter
+    BulkInserter -->|Grava dados| InMemDB
     
     %% Relações do Emulador Base
     ExtSetup -->|Injeta DelegatingHandler| Chaos
@@ -61,9 +64,10 @@ Mostra o comportamento sequencial no momento em que a aplicação "sobe", lendo 
 ```mermaid
 sequenceDiagram
     participant App as API Host (Program.cs)
-    participant SDK as PhantomSeederExtensions
+    participant SDK as PhantomCosmosSeederExtensions
     participant Seeder as CosmosDbSeederService
     participant Reader as SeedFileReader
+    participant Inserter as CosmosDbBulkInserter
     participant Base as InMemoryEmulator
 
     App->>SDK: UseCosmosPhantomSeederAsync()
@@ -76,8 +80,10 @@ sequenceDiagram
         Seeder->>Base: Cria Container
         Seeder->>Reader: ReadSeedFileAsync(folder, container)
         Reader-->>Seeder: Retorna JSON string
-        Seeder->>Seeder: Parse do JSON para Objetos (Task.WhenAll batching)
-        Seeder->>Base: Insere Itens no Banco Em Memória
+        Seeder->>Inserter: BulkInsertAsync(container, json)
+        Inserter->>Inserter: Parse do JSON (Lotes de 50)
+        Inserter->>Base: UpsertItemAsync (em concorrência)
+        Inserter-->>Seeder: Retorna quantidade inserida
     end
     
     Seeder-->>SDK: Concluído
