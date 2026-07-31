@@ -1,25 +1,12 @@
 {
   "CosmosDbEmulator": {
     "DatabaseName": "sua_database_aqui",
-    "Chaos": {
-      "EnableThrottlingMode": false,
-      "ThrottlingRate": 0.2,
-      "Simulate429_TooManyRequests": false,
-      "Simulate503_ServiceUnavailable": false,
-      "Simulate408_RequestTimeout": false,
-      "Simulate403_Forbidden": false,
-      "Simulate401_Unauthorized": false,
-      "Simulate409_Conflict": false,
-      "Simulate413_EntityTooLarge": false,
-      "Simulate412_PreconditionFailed": false,
-      "Simulate400_BadRequest": false
-    },
     "Containers": [
       {
         "Name": "nome_do_seu_container",
         "PartitionKeyPath": "/id",
         "IndexingPolicy": {
-          "Mode": "Consistent",
+          "IndexingMode": "consistent",
           "Automatic": true,
           "IncludedPaths": [
             "/propriedade_1/?",
@@ -32,11 +19,11 @@
           "CompositeIndexes": [
             [
               {
-                "Path": "/id",
+                "Path": "/propriedade_1",
                 "Order": "ascending"
               },
               {
-                "Path": "/propriedade_1",
+                "Path": "/propriedade_2",
                 "Order": "descending"
               }
             ]

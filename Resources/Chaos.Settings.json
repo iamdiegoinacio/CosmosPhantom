@@ -1,0 +1,18 @@
+{
+  "CosmosChaosEngineering": {
+    "EnableRandomThrottling": false,
+    "ThrottlingProbability": 0.2,
+    "SimulateHighLatency": false,
+    "MinLatencyMs": 500,
+    "MaxLatencyMs": 2000,
+    "Simulate429_TooManyRequests": false,
+    "Simulate503_ServiceUnavailable": false,
+    "Simulate408_RequestTimeout": false,
+    "Simulate403_Forbidden": false,
+    "Simulate401_Unauthorized": false,
+    "Simulate409_Conflict": false,
+    "Simulate413_EntityTooLarge": false,
+    "Simulate412_PreconditionFailed": false,
+    "Simulate400_BadRequest": false
+  }
+}
