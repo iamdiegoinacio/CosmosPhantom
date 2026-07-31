@@ -19,18 +19,18 @@ public static class ChaosEngineeringConfigurator
         {
             if (IsBypassed) return null;
 
-            // NÃ£o injetar falhas em requisiÃ§Ãµes de metadados do Cosmos SDK (apenas em documentos)
+            // Não injetar falhas em requisições de metadados do Cosmos SDK (apenas em documentos)
             if (req.RequestUri != null && !req.RequestUri.AbsolutePath.Contains("/docs", StringComparison.OrdinalIgnoreCase))
                 return null; 
 
-            // SimulaÃ§Ã£o de Alta LatÃªncia (Ping / Delay)
+            // Simulação de Alta Latência (Ping / Delay)
             if (chaosConfig.SimulateHighLatency)
             {
                 int delay = random.Next(chaosConfig.MinLatencyMs, chaosConfig.MaxLatencyMs);
                 System.Threading.Thread.Sleep(delay);
             }
 
-            // SimulaÃ§Ã£o de Throttling RandÃ´mico
+            // Simulação de Throttling Randômico
             if (chaosConfig.EnableRandomThrottling && random.NextDouble() > chaosConfig.ThrottlingProbability)
                 return null; 
 

@@ -7,7 +7,7 @@ namespace Cosmos.Phantom.SDK.Seeding;
 internal static class SeedingServiceCollectionExtensions
 {
     /// <summary>
-    /// Registra os serviÃ§os responsÃ¡veis pela carga de dados (Seeding) no Cosmos DB.
+    /// Registra os serviços responsáveis pela carga de dados (Seeding) no Cosmos DB.
     /// </summary>
     public static IServiceCollection AddPhantomSeedingServices(this IServiceCollection services)
     {

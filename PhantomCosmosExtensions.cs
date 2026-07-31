@@ -1,4 +1,4 @@
-﻿using Microsoft.Azure.Cosmos;
+using Microsoft.Azure.Cosmos;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -15,21 +15,21 @@ namespace Cosmos.Phantom.SDK;
 public static class PhantomCosmosExtensions
 {
     /// <summary>
-    /// Registra apenas o CosmosClient emulado e os serviÃ§os de Seeding.
-    /// Em produÃ§Ã£o, a API consumidora deve registrar seu prÃ³prio CosmosClient.
+    /// Registra apenas o CosmosClient emulado e os serviços de Seeding.
+    /// Em produção, a API consumidora deve registrar seu próprio CosmosClient.
     /// </summary>
     public static IServiceCollection AddCosmosPhantomEmulator(
         this IServiceCollection services,
         IHostEnvironment environment,
         IConfiguration configuration)
     {
-        // Fail-Fast Silencioso: Se nÃ£o for dev ou a flag estiver desligada, ignora o SDK.
-        if (!environment.IsDevelopment() || !configuration.GetValue<bool>("UseCosmosDbEmulator"))
+        // Fail-Fast Silencioso: Se não for dev ou a flag estiver desligada, ignora o SDK.
+        if (!environment.IsDevelopment() || !configuration.GetValue<bool>("UseCosmosPhantom"))
         {
             return services;
         }
 
-        // 1. Resolve configuraÃ§Ãµes (UsuÃ¡rio vs Embutido)
+        // 1. Resolve configurações (Usuário vs Embutido)
         var emulatorConfig = CosmosEmulatorConfigResolver.Resolve(configuration);
         var chaosConfig = CosmosChaosConfigResolver.Resolve(configuration);
         if (emulatorConfig == null) return services;
@@ -63,7 +63,7 @@ public static class PhantomCosmosExtensions
             };
         });
 
-        // 4. Registra serviÃ§os complementares
+        // 4. Registra serviços complementares
         services.AddPhantomSeedingServices();
 
         return services;

@@ -6,11 +6,11 @@ namespace Cosmos.Phantom.SDK.Configuration;
 
 public class CosmosDbEmulatorConfig
 {
-    [Required(ErrorMessage = "A propriedade 'DatabaseName' Ã© obrigatÃ³ria na configuraÃ§Ã£o do CosmosDbEmulator.")]
+    [Required(ErrorMessage = "A propriedade 'DatabaseName' é obrigatória na configuração do CosmosDbEmulator.")]
     public required string DatabaseName { get; set; }
 
     [Required]
-    [MinLength(1, ErrorMessage = "A lista de 'Containers' estÃ¡ vazia ou ausente. Ao menos um container deve ser configurado.")]
+    [MinLength(1, ErrorMessage = "A lista de 'Containers' está vazia ou ausente. Ao menos um container deve ser configurado.")]
     public List<ContainerConfig> Containers { get; set; } = [];
 }
 

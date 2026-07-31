@@ -9,8 +9,8 @@ namespace Cosmos.Phantom.SDK.Configuration;
 internal static class CosmosChaosConfigResolver
 {
     /// <summary>
-    /// LÃª a configuraÃ§Ã£o providenciada pelo consumidor e realiza o fallback/merge 
-    /// com a configuraÃ§Ã£o padrÃ£o de caos embutida no SDK.
+    /// Lê a configuração providenciada pelo consumidor e realiza o fallback/merge 
+    /// com a configuração padrão de caos embutida no SDK.
     /// </summary>
     public static ChaosConfig? Resolve(IConfiguration configuration)
     {
@@ -23,13 +23,13 @@ internal static class CosmosChaosConfigResolver
         }
         else if (fallbackConfig != null)
         {
-            // Mescla de configuraÃ§Ãµes: se o usuÃ¡rio preencheu o section mas nÃ£o definiu tudo
-            // PoderÃ­amos fazer um merge detalhado aqui se houvesse propriedades complexas aninhadas,
-            // mas como o ChaosConfig sÃ£o apenas booleanos e doubles primitivos, 
-            // e tipos primitivos tÃªm valor default (false/0.0), Ã© difÃ­cil saber se o usuÃ¡rio
+            // Mescla de configurações: se o usuário preencheu o section mas não definiu tudo
+            // Poderíamos fazer um merge detalhado aqui se houvesse propriedades complexas aninhadas,
+            // mas como o ChaosConfig são apenas booleanos e doubles primitivos, 
+            // e tipos primitivos têm valor default (false/0.0), é difícil saber se o usuário
             // os declarou explicitamente como false ou se foram omitidos.
-            // Para simplificar, consideramos que se ele criou a sessÃ£o "CosmosChaosEngineering",
-            // ele estÃ¡ assumindo o controle total. Caso contrÃ¡rio, usamos o fallback.
+            // Para simplificar, consideramos que se ele criou a sessão "CosmosChaosEngineering",
+            // ele está assumindo o controle total. Caso contrário, usamos o fallback.
         }
 
         return chaosConfig;
@@ -53,7 +53,7 @@ internal static class CosmosChaosConfigResolver
         }
         catch
         {
-            return null; // Falha segura se o embedded resource nÃ£o for encontrado
+            return null; // Falha segura se o embedded resource não for encontrado
         }
     }
 }

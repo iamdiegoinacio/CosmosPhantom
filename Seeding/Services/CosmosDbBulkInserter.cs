@@ -57,7 +57,7 @@ public class CosmosDbBulkInserter(ILogger<CosmosDbBulkInserter> logger) : ICosmo
                         logger.LogError(t.Exception, "[CosmosDbSeeder] Falha ao inserir item com PK {PkValue}", pkValue);
                 }, ct));
 
-            // Lotes de 50 inserÃ§Ãµes assÃ­ncronas concorrentes
+            // Lotes de 50 inserções assíncronas concorrentes
             if (tasks.Count >= 50)
             {
                 await Task.WhenAll(tasks);

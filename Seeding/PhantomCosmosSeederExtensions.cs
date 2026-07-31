@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
@@ -24,7 +24,7 @@ public static class PhantomCosmosSeederExtensions
         var config = services.GetRequiredService<Microsoft.Extensions.Configuration.IConfiguration>();
         
         // Fail-Fast Silencioso
-        if (!environment.IsDevelopment() || !config.GetValue<bool>("UseCosmosDbEmulator"))
+        if (!environment.IsDevelopment() || !config.GetValue<bool>("UseCosmosPhantom"))
         {
             return;
         }

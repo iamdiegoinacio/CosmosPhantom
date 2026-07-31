@@ -24,7 +24,7 @@ public class SeedFileReader : ISeedFileReader
             }
         }
 
-        // 2. Fallback: Tenta ler o arquivo padrÃ£o embutido na DLL do SDK
+        // 2. Fallback: Tenta ler o arquivo padrão embutido na DLL do SDK
         var assembly = Assembly.GetExecutingAssembly();
         var resourceName = $"Cosmos.Phantom.SDK.Resources.Seeds.{containerName}.json";
         

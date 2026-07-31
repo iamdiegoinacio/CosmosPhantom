@@ -8,8 +8,8 @@ namespace Cosmos.Phantom.SDK.Configuration;
 internal static class CosmosEmulatorConfigResolver
 {
     /// <summary>
-    /// LÃª a configuraÃ§Ã£o providenciada pelo consumidor e realiza o fallback/merge 
-    /// com a configuraÃ§Ã£o padrÃ£o embutida no SDK.
+    /// Lê a configuração providenciada pelo consumidor e realiza o fallback/merge 
+    /// com a configuração padrão embutida no SDK.
     /// </summary>
     public static CosmosDbEmulatorConfig? Resolve(IConfiguration configuration)
     {
@@ -22,7 +22,7 @@ internal static class CosmosEmulatorConfigResolver
         }
         else if (fallbackConfig != null)
         {
-            // Mescla as configuraÃ§Ãµes caso o usuÃ¡rio tenha fornecido apenas algumas propriedades
+            // Mescla as configurações caso o usuário tenha fornecido apenas algumas propriedades
             emulatorConfig.DatabaseName ??= fallbackConfig.DatabaseName;
             emulatorConfig.Containers ??= fallbackConfig.Containers;
         }
@@ -48,7 +48,7 @@ internal static class CosmosEmulatorConfigResolver
         }
         catch
         {
-            return null; // Falha segura se o embedded resource nÃ£o for encontrado
+            return null; // Falha segura se o embedded resource não for encontrado
         }
     }
 }

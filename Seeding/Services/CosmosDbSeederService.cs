@@ -21,7 +21,7 @@ public class CosmosDbSeederService(
     {
         if (string.IsNullOrWhiteSpace(_config?.DatabaseName))
         {
-            logger.LogError("[CosmosDbSeeder] ConfiguraÃ§Ã£o invÃ¡lida ou nome do banco nÃ£o definido.");
+            logger.LogError("[CosmosDbSeeder] Configuração inválida ou nome do banco não definido.");
             return;
         }
 
@@ -35,7 +35,7 @@ public class CosmosDbSeederService(
             
             if (string.IsNullOrWhiteSpace(jsonContent))
             {
-                logger.LogWarning("[CosmosDbSeeder] Arquivo de seed nÃ£o encontrado ou vazio para '{Container}'. Criado vazio.", containerConfig.Name);
+                logger.LogWarning("[CosmosDbSeeder] Arquivo de seed não encontrado ou vazio para '{Container}'. Criado vazio.", containerConfig.Name);
                 continue;
             }
 
