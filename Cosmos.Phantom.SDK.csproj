@@ -4,6 +4,15 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    
+    <!-- NuGet Package Metadata -->
+    <PackageId>Cosmos.Phantom.SDK</PackageId>
+    <Version>1.0.0</Version>
+    <Authors>Diego Silva</Authors>
+    <Description>Cosmos DB In-Memory Emulator SDK wrapper com suporte a Auto-Seeding e Chaos Engineering, ideal para ambiente local e testes integrados.</Description>
+    <RepositoryUrl>https://github.com/iamdiegoinacio/CosmosPhantom</RepositoryUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup>
