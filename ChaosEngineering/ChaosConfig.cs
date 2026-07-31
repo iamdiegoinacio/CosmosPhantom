@@ -1,9 +1,13 @@
-﻿namespace Cosmos.Phantom.InMemoryEmulator.SDK.ChaosEngineering;
+﻿namespace Cosmos.Phantom.SDK.ChaosEngineering;
 
 public class ChaosConfig
 {
-    public bool EnableThrottlingMode { get; set; } = false;
-    public double ThrottlingRate { get; set; } = 0.2;
+    public bool EnableRandomThrottling { get; set; } = false;
+    public double ThrottlingProbability { get; set; } = 0.2;
+    
+    public bool SimulateHighLatency { get; set; } = false;
+    public int MinLatencyMs { get; set; } = 500;
+    public int MaxLatencyMs { get; set; } = 2000;
     
     public bool Simulate429_TooManyRequests { get; set; }
     public bool Simulate503_ServiceUnavailable { get; set; }
